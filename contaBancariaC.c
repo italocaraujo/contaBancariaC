@@ -1,20 +1,43 @@
 #include <stdio.h>
 #include <locale.h>
+#include <string.h>
+
+#define SALDO_FILE "saldo.txt"
+
+double lerSaldo() {
+    FILE *file = fopen(SALDO_FILE, "r");
+    double saldo = 0.0;
+    if (file != NULL) {
+        fscanf(file, "%lf", &saldo);
+        fclose(file);
+    }
+    return saldo;
+}
+
+void salvarSaldo(double saldo) {
+    FILE *file = fopen(SALDO_FILE, "w");
+    if (file != NULL) {
+        fprintf(file, "%.2f", saldo);
+        fclose(file);
+    } else {
+        printf("Erro ao abrir o arquivo para salvar o saldo.\n");
+    }
+}
 
 int main() {
-	setlocale(LC_ALL,"portuguese");
-	
-     char nome[50];
+    setlocale(LC_ALL, "portuguese");
+
+    char nome[50];
     char tipoConta[] = "Corrente";
-    double saldo = 1599.99;
+    double saldo = lerSaldo();
     int opcao = 0;
-    
+
     printf("Qual seu nome?\n");
     fgets(nome, 50, stdin);
-	
-	if (nome[strlen(nome) - 1] == '\n')
+
+    if (nome[strlen(nome) - 1] == '\n')
         nome[strlen(nome) - 1] = '\0';
-	
+
     printf("***********************\n");
     printf("\nNome do cliente: %s\n", nome);
     printf("Tipo conta: %s\n", tipoConta);
@@ -52,6 +75,8 @@ int main() {
         } else if (opcao != 4) {
             printf("Opção inválida!\n");
         }
+
+        salvarSaldo(saldo); // Salvar saldo após cada operação
     }
 
     return 0;
